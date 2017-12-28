@@ -20,6 +20,6 @@ The app has support for all the 28 avatars available in Netflix, and shows in th
 Netflix Party support so you and your friends can watch anything together (and show in the Rich Presence, obviously)
 
 # Previews
-[!Browsing](https://nirewen.s-ul.eu/i7XVpo6t.png)
+![Browsing](https://nirewen.s-ul.eu/i7XVpo6t.png)
 
-[!Watching](https://nirewen.s-ul.eu/1p7pev5D.png) 
+![Watching](https://nirewen.s-ul.eu/1p7pev5D.png) 

@@ -1,0 +1,32 @@
+{
+  "name": "Netflix",
+  "version": "1.0.2",
+  "description": "A Netflix wrapper with Discord Rich Presence",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "build"
+  },
+  "keywords": [
+    "discord",
+    "presence",
+    "netflix"
+  ],
+  "author": "Nirewen",
+  "license": "ISC",
+  "dependencies": {
+    "discord-rpc": "^3.0.0-beta.8",
+    "electron-widevinecdm": "^5.0.2"
+  },
+  "devDependencies": {
+    "electron": "^1.8.1",
+    "electron-builder": "^19.49.3"
+  },
+  "build": {
+    "appId": "com.netflix.nirewen",
+    "win": {
+      "target": "nsis",
+      "icon": "./icon.ico"
+    }
+  }
+}

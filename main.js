@@ -8,7 +8,6 @@ widevine.load(app);
 let appID = '387083698358714368',
     mainWindow,
     smallImageKey,
-    smallImageText,
     WindowSettings = {
         backgroundColor: '#000',
         useContentSize: false,
@@ -38,18 +37,15 @@ let appID = '387083698358714368',
                 avatar: document.querySelector('img.profile-icon') 
                     ? document.querySelector('img.profile-icon').getAttribute('src').split('/').pop().split('.')[0].toLowerCase()
                     : undefined,
-                username: document.querySelector('.profile-link .profile-name')
-                    ? document.querySelector('.profile-link .profile-name').innerHTML
-                    : undefined,
             }
         }
         if (type == 'watch' && document.querySelector(".player-status-main-title")) {
             let show = document.querySelector('.player-status').getElementsByTagName('span');
             return {
-                name   : document.querySelector(".player-status-main-title").innerHTML,
-                title  : show[2].innerHTML,
-                episode: show[1].innerHTML.split(/:? /)[3].padStart(2, '0'),
-                season : show[1].innerHTML.split(/:? /)[1].padStart(2, '0'),
+                name   : show[0].innerHTML,
+                title  : show[2] ? show[2].innerHTML : undefined,
+                episode: show[1] ? show[1].innerHTML.split(/:? /)[3].padStart(2, '0') : undefined,
+                season : show[1] ? show[1].innerHTML.split(/:? /)[1].padStart(2, '0') : undefined,
             }
         }
     })()`,
@@ -72,21 +68,18 @@ async function checkNetflix() {
     let infos = await mainWindow.webContents.executeJavaScript(getInfos);
     
     if (infos) { // if !infos don't change presence then.
-        let {name, title, episode, season, avatar, username} = infos,
+        let {name, title, episode, season, avatar} = infos,
             video = episode && season 
                 ? `S${season}E${episode} - ${title}` 
-                : title,
-            show = {name, video,};
+                : title;
         
         if (avatar) smallImageKey = avatar;
-        if (username) smallImageText = username;
         
         rpc.setActivity({
             details: name,
             state: video,
             largeImageKey: 'netflix',
             smallImageKey,
-            smallImageText,
             instance: false,
         });
     }

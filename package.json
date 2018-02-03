@@ -7,20 +7,20 @@
     "start": "electron .",
     "dist": "build"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/nirewen/discord-netflix.git"
+  },
   "keywords": [
     "discord",
+    "rich",
     "presence",
     "netflix"
   ],
   "author": "Nirewen",
   "license": "ISC",
-  "dependencies": {
-    "discord-rpc": "^3.0.0-beta.8",
-    "electron-widevinecdm": "^5.0.2"
-  },
-  "devDependencies": {
-    "electron": "^1.8.1",
-    "electron-builder": "^19.49.3"
+  "bugs": {
+    "url": "https://github.com/nirewen/discord-netflix/issues"
   },
   "build": {
     "appId": "com.netflix.nirewen",
@@ -28,5 +28,14 @@
       "target": "nsis",
       "icon": "./icon.ico"
     }
+  },
+  "homepage": "https://github.com/nirewen/discord-netflix#readme",
+  "dependencies": {
+    "discord-rpc": "^3.0.0-beta.8",
+    "electron-widevinecdm": "^5.0.2"
+  },
+  "devDependencies": {
+    "electron": "^1.8.2-beta.5",
+    "electron-builder": "^19.55.3"
   }
 }

@@ -9,7 +9,7 @@ let appID = '387083698358714368',
     mainWindow,
     smallImageKey,
     WindowSettings = {
-        backgroundColor: '#000',
+        backgroundColor: '#FFF',
         useContentSize: false,
         autoHideMenuBar: true,
         resizable: true,
@@ -30,22 +30,20 @@ let appID = '387083698358714368',
     },
     getInfos = `(function() {
         let [type, id] = window.location.pathname.split('/').slice(1, 3);
-        if (type == 'browse') {
+        if (type == 'browse' && type != 'watch') {
             return {
-                name: 'Browsing',
-                title: 'In the Catalog',
-                avatar: document.querySelector('img.profile-icon') 
+                name  : 'Browsing',
+                title : 'In the Catalogs',
+                avatar: document.querySelector('img.profile-icon')
                     ? document.querySelector('img.profile-icon').getAttribute('src').split('/').pop().split('.')[0].toLowerCase()
                     : undefined,
             }
         }
-        if (type == 'watch' && document.querySelector(".player-status-main-title")) {
-            let show = document.querySelector('.player-status').getElementsByTagName('span');
+        if (type == 'watch' && document.querySelector(".ellipsize-text")) {
             return {
-                name   : show[0].innerHTML,
-                title  : show[2] ? show[2].innerHTML : undefined,
-                episode: show[1] ? show[1].innerHTML.split(/:? /)[3].padStart(2, '0') : undefined,
-                season : show[1] ? show[1].innerHTML.split(/:? /)[1].padStart(2, '0') : undefined,
+                name   : document.querySelector('.ellipsize-text').querySelector('h4').innerHTML,
+                title  : document.querySelector('.ellipsize-text').querySelectorAll('span')[1].innerHTML,
+                episode: document.querySelector('.ellipsize-text').querySelector('span').innerHTML
             }
         }
     })()`,

@@ -1,6 +1,6 @@
 {
   "name": "Netflix",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A Netflix wrapper with Discord Rich Presence",
   "main": "main.js",
   "scripts": {

@@ -2,7 +2,7 @@
 A Netflix wrapper that uses Discord RPC to show what you're watching using the new Rich Presence
 
 # That's too much! I just want to use it!
-You can download a prebuilt installer from (releases)(https://github.com/nirewen/discord-netflix/releases) if you want.
+You can download a prebuilt installer from [releases](https://github.com/nirewen/discord-netflix/releases) if you want.
 
 # Building yourself
 

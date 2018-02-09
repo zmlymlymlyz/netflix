@@ -21,6 +21,11 @@ To build the app for distribution, run `npm run dist`.
 If you have a suggestion, an implementation, a fix, you can fork this repo and make all the changes you want.
 Then, when you're finished, you can open a pull request here.
 
+# Contributors
+* [Nirewen#9011](http://github.com/nirewen)
+* [Keyygan#0001](https://github.com/keyygan)
+* [Dmfj#0001](https://github.com/dmfj)
+
 # Errors
 If Discord is not opened, or, for some reason, the RPC Client couldn't connect to it, an error will show in the app. It disappears in 15 seconds.
 Even if Discord is not opened, you can still use the app as a normal Netflix wrapper.

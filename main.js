@@ -8,6 +8,7 @@ widevine.load(app);
 let appID = '387083698358714368',
     mainWindow,
     smallImageKey,
+    start, end,
     WindowSettings = {
         backgroundColor: '#FFF',
         useContentSize: false,
@@ -34,16 +35,16 @@ let appID = '387083698358714368',
             return {
                 name  : 'Browsing',
                 title : 'In the Catalogs',
-                avatar: document.querySelector('img.profile-icon')
-                    ? document.querySelector('img.profile-icon').getAttribute('src').split('/').pop().split('.')[0].toLowerCase()
-                    : undefined,
+                avatar: document.querySelector('img.profile-icon') && document.querySelector('img.profile-icon').getAttribute('src').split('/').pop().split('.')[0].toLowerCase(),
             }
         }
         if (type == 'watch' && document.querySelector(".ellipsize-text")) {
+            let name = document.querySelector('.ellipsize-text'),
+                span = document.querySelector('.ellipsize-text').querySelectorAll('span');
             return {
-                name   : document.querySelector('.ellipsize-text').querySelector('h4').innerHTML,
-                title  : document.querySelector('.ellipsize-text').querySelectorAll('span')[1].innerHTML,
-                episode: document.querySelector('.ellipsize-text').querySelector('span').innerHTML
+                name    : name.querySelector('h4') ? name.querySelector('h4').innerHTML : name.innerHTML,
+                title   : span.length ? span[1].innerHTML : undefined,
+                episode : span.length ? span[0].innerHTML : undefined,
             }
         }
     })()`,
@@ -66,10 +67,11 @@ async function checkNetflix() {
     let infos = await mainWindow.webContents.executeJavaScript(getInfos);
     
     if (infos) { // if !infos don't change presence then.
-        let {name, title, episode, season, avatar} = infos,
-            video = episode && season 
-                ? `S${season}E${episode} - ${title}` 
-                : title;
+        let {name, title, episode, avatar, progress} = infos,
+            video = episode && title
+                ? `${episode} - ${title}` 
+                : title,
+            curr = parseInt(new Date().getTime().toString().slice(0, 10));
         
         if (avatar) smallImageKey = avatar;
         

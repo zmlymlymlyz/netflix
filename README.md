@@ -41,3 +41,10 @@ Progress bar support, so it shows how much time is remaining in the Rich Presenc
 ![Browsing](https://nirewen.s-ul.eu/i7XVpo6t.png)
 
 ![Watching](https://nirewen.s-ul.eu/1p7pev5D.png) 
+
+# Tutorials
+
+### PT-BR
+[![](https://i.ytimg.com/vi/8AYBykvOKzo/0.jpg)](https://www.youtube.com/watch?v=8AYBykvOKzo)
+
+Credits: Maicon Alves (Maik`#8097`)

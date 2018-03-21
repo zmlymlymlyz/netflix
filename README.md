@@ -31,7 +31,7 @@ If Discord is not opened, or, for some reason, the RPC Client couldn't connect t
 Even if Discord is not opened, you can still use the app as a normal Netflix wrapper.
 
 # Things you should know
-The app has support for all the 28 avatars available in Netflix, and shows in the Rich Presence (see previews).
+The app has support for all the 33 avatars available in Netflix, and shows in the Rich Presence (see previews).
 
 # Planned
 Netflix Party support so you and your friends can watch anything together (and show in the Rich Presence, obviously)

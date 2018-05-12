@@ -1,6 +1,7 @@
 const {BrowserWindow, app} = require('electron');
 const {Client} = require('discord-rpc');
 const widevine = require('electron-widevinecdm');
+const moment   = require('moment');
 const rpc      = new Client({transport: 'ipc'});
 
 widevine.load(app);
@@ -40,11 +41,15 @@ let appID = '387083698358714368',
         }
         if (type == 'watch' && document.querySelector(".ellipsize-text")) {
             let name = document.querySelector('.ellipsize-text'),
-                span = document.querySelector('.ellipsize-text').querySelectorAll('span');
+                span = document.querySelector('.ellipsize-text').querySelectorAll('span'),
+                video = document.getElementById(id).getElementsByTagName('video')[0];
             return {
-                name    : name.querySelector('h4') ? name.querySelector('h4').innerHTML : name.innerHTML,
-                title   : span.length ? span[1].innerHTML : undefined,
-                episode : span.length ? span[0].innerHTML : undefined,
+                name             : name.querySelector('h4') ? name.querySelector('h4').innerHTML : name.innerHTML,
+                title            : span.length ? span[1].innerHTML : undefined,
+                episode          : span.length ? span[0].innerHTML : undefined,
+                videoDuration    : video.duration,
+                videoCurrentTime : video.currentTime,
+                videoPaused      : video.paused,
             }
         }
     })()`,
@@ -67,13 +72,23 @@ async function checkNetflix() {
     let infos = await mainWindow.webContents.executeJavaScript(getInfos);
     
     if (infos) { // if !infos don't change presence then.
-        let {name, title, episode, avatar, progress} = infos,
+        let {name, title, episode, avatar, videoDuration, videoCurrentTime, videoPaused} = infos,
             video = episode && title
                 ? `${episode} - ${title}` 
                 : title,
             curr = parseInt(new Date().getTime().toString().slice(0, 10));
+        let endTime = null;
         
         if (avatar) smallImageKey = avatar;
+
+        if (videoDuration && videoCurrentTime) {
+            if (!videoPaused) {
+                let now = moment.utc();
+                let remaining = moment.duration(videoDuration - videoCurrentTime, 'seconds');
+
+                endTime = now.add(remaining).unix();
+            }
+        }
         
         rpc.setActivity({
             details: name,
@@ -81,6 +96,7 @@ async function checkNetflix() {
             largeImageKey: 'netflix',
             smallImageKey,
             instance: false,
+            endTimestamp: endTime,
         });
     }
 }

@@ -32,7 +32,8 @@
   "homepage": "https://github.com/nirewen/discord-netflix#readme",
   "dependencies": {
     "discord-rpc": "^3.0.0-beta.8",
-    "electron-widevinecdm": "^5.0.2"
+    "electron-widevinecdm": "^5.0.2",
+    "moment": "^2.22.1"
   },
   "devDependencies": {
     "electron": "^1.8.2-beta.5",

@@ -7,7 +7,7 @@ You can download a prebuilt installer from [releases](https://github.com/nirewen
 # Building yourself
 
 ## Prepairing the environment
-You will need [Node.js](http://nodejs.org/en/download) installed and added to the PATH, so just download the installer and make sure to select the box to add to PATH.
+You will need [Node.js](http://nodejs.org/en/download) installed and added to the PATH, so just download the installer and make sure to select the box to add to PATH. Version must be 7.0.0 >
 
 ## Running
 You have to install the dependencies. So, just run `npm install` in the repo's folder.

@@ -41,7 +41,13 @@ Progress bar support, so it shows how much time is remaining in the Rich Presenc
 # Previews
 ![Browsing](https://nirewen.s-ul.eu/i7XVpo6t.png)
 
-![Watching](https://nirewen.s-ul.eu/1p7pev5D.png) 
+
+Watching a Show: 
+![Watching](https://img.hexaplexsoftware.ga/saved/VRBYhv2q.png) 
+
+Watching a Movie
+![Watching](https://img.hexaplexsoftware.ga/saved/r2vii1T7.png)
+
 
 # Tutorials
 

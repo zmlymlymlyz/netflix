@@ -39,6 +39,8 @@ Netflix Party support so you and your friends can watch anything together (and s
 Progress bar support, so it shows how much time is remaining in the Rich Presence.
 
 # Previews
+
+Idle: <br>
 ![Browsing](https://nirewen.s-ul.eu/i7XVpo6t.png)
 
 

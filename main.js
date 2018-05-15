@@ -82,16 +82,16 @@ async function checkNetflix() {
          
         if (avatar) smallImageKey = avatar;
 
+		smallImageText = "Idle"
         if (videoDuration && videoCurrentTime) {
             if (!videoPaused) {
                 let now = moment.utc();
                 let remaining = moment.duration(videoDuration - videoCurrentTime, 'seconds');
 				
-				
-				smallImageText = "▶️ Playing";
+				smallImageText = "Playing";
                 endTime = now.add(remaining).unix();
             } 
-			if (videoPaused) {smallImageText = "⏸️ Paused"}
+			if (videoPaused) {smallImageText = "Paused"}
         }
         
         rpc.setActivity({

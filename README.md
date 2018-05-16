@@ -37,7 +37,6 @@ The app has support for all the 33 avatars available in Netflix, and shows in th
 
 # Planned
 Netflix Party support so you and your friends can watch anything together (and show in the Rich Presence, obviously)
-Progress bar support, so it shows how much time is remaining in the Rich Presence.
 
 # Previews
 

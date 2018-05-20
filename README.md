@@ -7,7 +7,7 @@ You can download a prebuilt installer from [releases](https://github.com/nirewen
 # Building yourself
 
 ## Prepairing the environment
-You will need [Node.js](http://nodejs.org/en/download) installed and added to the PATH, so just download the installer and make sure to select the box to add to PATH.
+You will need [Node.js](http://nodejs.org/en/download) installed and added to the PATH, so just download the installer and make sure to select the box to add to PATH. Version must be 7.0.0 >
 
 ## Running
 You have to install the dependencies. So, just run `npm install` in the repo's folder.
@@ -25,6 +25,8 @@ Then, when you're finished, you can open a pull request here.
 * [Nirewen#9011](http://github.com/nirewen)
 * [Keyygan#0001](https://github.com/keyygan)
 * [Dmfj#0001](https://github.com/dmfj)
+* [Wistful__#9063](https://hexaplexsoftware.ga/wist/)
+* [NovusTheory#2244](https://github.com/NovusTheory)
 
 # Errors
 If Discord is not opened, or, for some reason, the RPC Client couldn't connect to it, an error will show in the app. It disappears in 15 seconds.
@@ -35,12 +37,19 @@ The app has support for all the 33 avatars available in Netflix, and shows in th
 
 # Planned
 Netflix Party support so you and your friends can watch anything together (and show in the Rich Presence, obviously)
-Progress bar support, so it shows how much time is remaining in the Rich Presence.
 
 # Previews
+
+Idle: <br>
 ![Browsing](https://nirewen.s-ul.eu/i7XVpo6t.png)
 
-![Watching](https://nirewen.s-ul.eu/1p7pev5D.png) 
+
+Watching a Show: <br> 
+![Watching](https://img.hexaplexsoftware.ga/saved/VRBYhv2q.png) 
+
+Watching a Movie: <br>
+![Watching](https://img.hexaplexsoftware.ga/saved/r2vii1T7.png)
+
 
 # Tutorials
 

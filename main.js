@@ -3,6 +3,7 @@ const {Client} 			   = require('discord-rpc');
 const widevine             = require('electron-widevinecdm');
 const moment               = require('moment');
 const rpc                  = new Client({transport: 'ipc'});
+const crypto               = require('crypto');
 
 widevine.load(app);
 
@@ -43,7 +44,7 @@ let appID = '387083698358714368',
         if (type == 'watch' && document.querySelector(".ellipsize-text")) {
             let name = document.querySelector('.ellipsize-text'),
                 span = document.querySelector('.ellipsize-text').querySelectorAll('span'),
-                video = document.getElementById(id).getElementsByTagName('video')[0];
+                video = document.querySelector('.VideoContainer').getElementsByTagName('video')[0];
             return {
                 name             : name.querySelector('h4') ? name.querySelector('h4').innerHTML : name.innerHTML,
                 title            : span.length ? span[1].innerHTML : undefined,
@@ -80,7 +81,7 @@ async function checkNetflix() {
             curr = parseInt(new Date().getTime().toString().slice(0, 10));
         let endTime = null;
          
-        if (avatar) smallImageKey = avatar;
+        if (avatar) smallImageKey = crypto.createHash('md5').update(avatar).digest('hex');
 
 		smallImageText = "Idle"
         if (videoDuration && videoCurrentTime) {
@@ -120,8 +121,6 @@ app.on('ready', () => {
     login();
 });
 
-app.on('window-all-closed', app.quit);
-app.on('before-quit', () => {
-    mainWindow.removeAllListeners('close');
-    mainWindow.close();
+app.on('window-all-closed', () => {
+    app.quit();
 });

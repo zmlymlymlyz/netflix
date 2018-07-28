@@ -38,7 +38,7 @@ let appID = '387083698358714368',
             return {
                 name  : 'Browsing',
                 title : 'In the Catalogs',
-                avatar: document.querySelector('img.profile-icon') && document.querySelector('img.profile-icon').getAttribute('src').split('/').pop().split('.')[0].toLowerCase(),
+                avatar: document.querySelector('img.profile-icon') && document.querySelector('img.profile-icon').getAttribute('src').split('/')[3] + '_png',
             }
         }
         if (type == 'watch' && document.querySelector(".ellipsize-text")) {
@@ -81,7 +81,8 @@ async function checkNetflix() {
             curr = parseInt(new Date().getTime().toString().slice(0, 10));
         let endTime = null;
          
-        if (avatar) smallImageKey = crypto.createHash('md5').update(avatar).digest('hex');
+        if (avatar) smallImageKey = avatar;
+		// if the avatar doesn't show in the Rich Presence, it means it's not supported
 
 		smallImageText = "Idle"
         if (videoDuration && videoCurrentTime) {

@@ -7,7 +7,7 @@ const crypto               = require('crypto');
 
 widevine.load(app);
 
-let appID = '387083698358714368',
+let clientId = '387083698358714368',
     mainWindow,
     smallImageKey,
 	smallImageText,
@@ -30,15 +30,15 @@ let appID = '387083698358714368',
     login = (tries = 0) => {
         if (tries > 10) return mainWindow.webContents.executeJavaScript(connectionNotice);
         tries += 1;
-        rpc.login(appID).catch(e => setTimeout(() => login(tries), 10E3));
+        rpc.login({clientId}).catch(e => setTimeout(() => login(tries), 10E3));
     },
     getInfos = `(function() {
         let [type, id] = window.location.pathname.split('/').slice(1, 3);
         if (type == 'browse' && type != 'watch') {
             return {
-                name  : 'Browsing',
-                title : 'In the Catalogs',
-                avatar: document.querySelector('img.profile-icon') && document.querySelector('img.profile-icon').getAttribute('src').split('/')[3] + '_png',
+                name   : 'Browsing',
+                episode: 'In the Catalogs',
+                avatar : document.querySelector('img.profile-icon') && document.querySelector('img.profile-icon').getAttribute('src').split('/')[3] + '_png',
             }
         }
         if (type == 'watch' && document.querySelector(".ellipsize-text")) {
@@ -47,7 +47,7 @@ let appID = '387083698358714368',
                 video = document.querySelector('.VideoContainer').getElementsByTagName('video')[0];
             return {
                 name             : name.querySelector('h4') ? name.querySelector('h4').innerHTML : name.innerHTML,
-                title            : span.length ? span[1].innerHTML : undefined,
+                title            : span.length > 1 ? span[1].innerHTML : undefined,
                 episode          : span.length ? span[0].innerHTML : undefined,
                 videoDuration    : video.duration,
                 videoCurrentTime : video.currentTime,
@@ -77,7 +77,7 @@ async function checkNetflix() {
         let {name, title, episode, avatar, videoDuration, videoCurrentTime, videoPaused} = infos,
             video = episode && title
                 ? `${episode} - ${title}` 
-                : title,
+                : episode,
             curr = parseInt(new Date().getTime().toString().slice(0, 10));
         let endTime = null;
          

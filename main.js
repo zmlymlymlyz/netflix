@@ -1,17 +1,15 @@
 const {BrowserWindow, app} = require('electron');
-const {Client} 			   = require('discord-rpc');
+const {Client}             = require('discord-rpc');
 const widevine             = require('electron-widevinecdm');
 const moment               = require('moment');
 const rpc                  = new Client({transport: 'ipc'});
-const crypto               = require('crypto');
 
 widevine.load(app);
 
 let clientId = '387083698358714368',
     mainWindow,
     smallImageKey,
-	smallImageText,
-    start, end,
+    smallImageText,
     WindowSettings = {
         backgroundColor: '#FFF',
         useContentSize: false,
@@ -27,6 +25,7 @@ let clientId = '387083698358714368',
             plugins: true,
         },
     },
+    current = {},
     login = (tries = 0) => {
         if (tries > 10) return mainWindow.webContents.executeJavaScript(connectionNotice);
         tries += 1;
@@ -78,33 +77,39 @@ async function checkNetflix() {
             video = episode && title
                 ? `${episode} - ${title}` 
                 : episode,
-            curr = parseInt(new Date().getTime().toString().slice(0, 10));
-        let endTime = null;
+            curr = parseInt(new Date().getTime().toString().slice(0, 10)),
+            endTimestamp;
          
         if (avatar) smallImageKey = avatar;
-		// if the avatar doesn't show in the Rich Presence, it means it's not supported
+        // if the avatar doesn't show in the Rich Presence, it means it's not supported
 
-		smallImageText = "Idle"
+        smallImageText = "Idle";
         if (videoDuration && videoCurrentTime) {
             if (!videoPaused) {
-                let now = moment.utc();
-                let remaining = moment.duration(videoDuration - videoCurrentTime, 'seconds');
-				
-				smallImageText = "Playing";
-                endTime = now.add(remaining).unix();
-            } else { smallImageText = "Paused" }
+                let now = moment.utc(),
+                    remaining = moment.duration(videoDuration - videoCurrentTime, 'seconds');
+                
+                smallImageText = "Playing";
+                endTimestamp = now.add(remaining).unix();
+            } else 
+                smallImageText = "Paused";
         }
-        
-        rpc.setActivity({
-            details: name,
-            state: video,
-            largeImageKey: 'netflix',
-			largeImageText: 'Netflix',
-            smallImageKey,
-			smallImageText,
-            instance: false,
-            endTimestamp: endTime,
-        });
+            
+        // set activity less often | only update if something has changed
+        if (current.avatar !== avatar || current.video !== video || current.videoPaused !== videoPaused) {
+            current = {avatar, video, videoPaused};
+            
+            rpc.setActivity({
+                details: name,
+                state: video,
+                largeImageKey: 'netflix',
+                largeImageText: 'Netflix',
+                smallImageKey,
+                smallImageText,
+                instance: false,
+                endTimestamp,
+            });
+        }
     }
 }
 

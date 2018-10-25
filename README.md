@@ -28,13 +28,9 @@ Then, when you're finished, you can open a pull request here.
 ## Contributors
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
+| [<img src="https://avatars1.githubusercontent.com/u/8761479?v=4" width="100px;"/><br /><sub><b>Eduardo Londero</b></sub>](https://github.com/nirewen "Nirewen#9011")<br />[💻](https://github.com/nirewen/discord-netflix/commits?author=nirewen "Code") [🎨](#design-nirewen "Design") | [<img src="https://avatars0.githubusercontent.com/u/22089269?v=4" width="100px;"/><br /><sub><b>Wist9063</b></sub>](https://hexaplexsoftware.ga/ "Wistful__#9063")<br />[💻](https://github.com/nirewen/discord-netflix/commits?author=Wist9063 "Code") [🎨](#design-Wist9063 "Design") | [<img src="https://avatars1.githubusercontent.com/u/27071605?v=4" width="100px;"/><br /><sub><b>Keegan</b></sub>](https://keyygan.me "Keyygan#0001")<br />[💻](https://github.com/nirewen/discord-netflix/commits?author=Keyygan "Code") | [<img src="https://avatars2.githubusercontent.com/u/13137236?v=4" width="100px;"/><br /><sub><b>Dominic Fitch-Jones</b></sub>](https://github.com/dmfj "Dmfj#0001")<br />[💡](# "Support") | [<img src="https://avatars0.githubusercontent.com/u/3434404?v=4" width="100px;"/><br /><sub><b>NovusTheory</b></sub>](https://modulobot.xyz "NovusTheory#2244")<br />[💻](https://github.com/nirewen/discord-netflix/commits?author=NovusTheory "Code") |
+| :---: | :---: | :---: | :---: | :---: |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
-
-* [Nirewen#9011](http://github.com/nirewen)
-* [Keyygan#0001](https://github.com/keyygan)
-* [Dmfj#0001](https://github.com/dmfj)
-* [Wistful__#9063](https://hexaplexsoftware.ga/wist/)
-* [NovusTheory#2244](https://github.com/NovusTheory)
 
 # Errors
 If Discord is not opened, or, for some reason, the RPC Client couldn't connect to it, an error will show in the app. It disappears in 15 seconds.<br>

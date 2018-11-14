@@ -1,5 +1,5 @@
 {
-  "name": "Netflix",
+  "name": "netflix",
   "version": "1.0.6",
   "description": "A Netflix wrapper with Discord Rich Presence",
   "main": "main.js",
@@ -32,12 +32,12 @@
   },
   "homepage": "https://github.com/nirewen/discord-netflix#readme",
   "dependencies": {
-    "discord-rpc": "^3.0.0",
+    "discord-rpc": "^3.0.1",
     "electron-widevinecdm": "^5.0.2",
     "moment": "^2.22.2"
   },
   "devDependencies": {
-    "electron": "^1.8.7",
+    "electron": "^3.0.9",
     "electron-builder": "^19.56.2",
     "npm-platform-dependencies": "^0.1.0"
   },

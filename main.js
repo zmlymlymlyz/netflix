@@ -2,6 +2,7 @@ const {BrowserWindow, app} = require('electron');
 const {Client}             = require('discord-rpc');
 const widevine             = require('electron-widevinecdm');
 const moment               = require('moment');
+const crypto               = require('crypto');
 const rpc                  = new Client({transport: 'ipc'});
 
 widevine.load(app);
@@ -34,10 +35,18 @@ let clientId = '387083698358714368',
     getInfos = `(function() {
         let [type, id] = window.location.pathname.split('/').slice(1, 3);
         if (type == 'browse' && type != 'watch') {
+            var rawAvatar = "";
+
+            // Sanity check to make sure the netflix API is loaded
+            if (window.netflix !== null) {
+                var currentProfileGuid = window.netflix.reactContext.models.userInfo.data.userGuid;
+                rawAvatar = window.netflix.falcorCache.profiles[currentProfileGuid].avatar.value[2];
+            }
+
             return {
                 name   : 'Browsing',
                 episode: 'In the Catalogs',
-                avatar : document.querySelector('img.profile-icon') && document.querySelector('img.profile-icon').getAttribute('src').split('/')[3] + '_png',
+                avatar : rawAvatar,
             }
         }
         if (type == 'watch' && document.querySelector(".ellipsize-text")) {
@@ -79,7 +88,15 @@ async function checkNetflix() {
                 : episode,
             curr = parseInt(new Date().getTime().toString().slice(0, 10)),
             endTimestamp;
-         
+
+        // Evaluate the avatar id from the avatar (RegExp was acting funny inside the executeJavaScript for some reason, same code worked if copy and pasted into inspect element console and here)
+        var avatarRegex = /AVATAR\|(.*)\|.*\|.*\|.*/gm;
+        var match = avatarRegex.exec(avatar);
+        if (match !== null) {
+            // MD5 hash is required as the length is too long (32 characters is the max)
+            avatar = crypto.createHash('md5').update(match[1]).digest('hex');
+        }
+
         if (avatar) smallImageKey = avatar;
         // if the avatar doesn't show in the Rich Presence, it means it's not supported
 

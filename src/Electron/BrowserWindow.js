@@ -17,8 +17,8 @@ module.exports = class BrowserWindow extends Electron.BrowserWindow {
             icon,
             webPreferences: {
                 nodeIntegration: false,
-                plugins: true,
-            },
+                plugins: true
+            }
         })
 
         this.rpc = rpc
@@ -82,7 +82,7 @@ module.exports = class BrowserWindow extends Electron.BrowserWindow {
                     smallImageKey,
                     smallImageText,
                     instance: false,
-                    endTimestamp,
+                    endTimestamp
                 })
             }
         }

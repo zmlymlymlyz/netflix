@@ -1,6 +1,8 @@
+/* global document, location, netflix */
+
 module.exports = {
     infos: function () {
-        let [type, id] = location.pathname.split('/').slice(1, 3)
+        let [type] = location.pathname.split('/').slice(1, 3)
         let avatar = ''
         let userName
 
@@ -10,7 +12,7 @@ module.exports = {
             userName = name
         }
 
-        if (type == 'browse') {
+        if (type === 'browse') {
             return {
                 name   : 'Browsing',
                 episode: 'In the Catalogs',
@@ -18,7 +20,7 @@ module.exports = {
                 userName
             }
         }
-        if (type == 'watch' && document.querySelector(".ellipsize-text")) {
+        if (type === 'watch' && document.querySelector('.ellipsize-text')) {
             let name = document.querySelector('.ellipsize-text')
             let span = document.querySelector('.ellipsize-text').querySelectorAll('span')
             let { duration, currentTime, paused } = document.querySelector('.VideoContainer').getElementsByTagName('video')[0]

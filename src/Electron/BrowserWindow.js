@@ -24,7 +24,7 @@ module.exports = class BrowserWindow extends Electron.BrowserWindow {
         return this.webContents.executeJavaScript(code)
     }
 
-    get infos () {
+    getInfos () {
         return this.eval(`(${scripts.infos})()`)
     }
 }

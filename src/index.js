@@ -52,9 +52,10 @@ app.on('rpc', () => {
 })
 
 async function checkNetflix () {
-    if (!rpc || !mainWindow) return;
+    if (!rpc || !mainWindow) 
+        return
     
-    let infos = await mainWindow.infos;
+    let infos = await mainWindow.getInfos()
     
     if (infos) { // if !infos don't change presence then.
         let { name, title, episode, duration, currentTime, paused, avatar, userName } = infos

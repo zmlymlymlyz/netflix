@@ -1,8 +1,8 @@
 {
-  "name": "netflix",
-  "version": "1.0.6",
+  "name": "Netflix",
+  "version": "2.0.0",
   "description": "A Netflix wrapper with Discord Rich Presence",
-  "main": "main.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "electron .",
     "dist": "build",
@@ -27,7 +27,7 @@
     "appId": "com.netflix.nirewen",
     "win": {
       "target": "nsis",
-      "icon": "./icon.ico"
+      "icon": "./assets/icon.ico"
     }
   },
   "homepage": "https://github.com/nirewen/discord-netflix#readme",

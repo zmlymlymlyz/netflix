@@ -38,16 +38,6 @@
   },
   "devDependencies": {
     "electron": "^3.0.9",
-    "electron-builder": "^19.56.2",
-    "npm-platform-dependencies": "^0.1.0"
-  },
-  "darwinDependencies": {
-    "electron-widevinecdm": "^7.0.0"
-  },
-  "linuxDependencies": {
-    "electron-widevinecdm": "^7.0.0"
-  },
-  "win32Dependencies": {
-    "electron-widevinecdm": "^5.0.2"
+    "electron-builder": "^19.56.2"
   }
 }

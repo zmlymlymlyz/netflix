@@ -5,8 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "electron .",
-    "dist": "build",
-    "postinstall": "npmpd --no-save"
+    "dist": "build"
   },
   "repository": {
     "type": "git",

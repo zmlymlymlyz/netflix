@@ -25,9 +25,9 @@
   "build": {
     "appId": "com.netflix.nirewen",
     "win": {
-      "target": "nsis",
-      "icon": "./assets/icon.ico"
-    }
+      "target": "nsis"
+    },
+    "icon": "./assets/icon.png"
   },
   "homepage": "https://github.com/nirewen/discord-netflix#readme",
   "dependencies": {

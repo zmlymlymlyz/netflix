@@ -7,6 +7,8 @@ widevine.load(app)
 
 app.setAppUserModelId('com.netflix.nirewen')
 
+const icon = path.join(__dirname, '../assets/icon.png')
+
 let mainWindow
 const rpc = new Client({
     transport: 'ipc',
@@ -23,7 +25,7 @@ app.on('ready', () => {
     mainWindow = new BrowserWindow({
         rpc,
         title: 'Netflix',
-        icon: path.join(__dirname, '../assets/icon.ico')
+        icon
     })
     mainWindow.maximize()
     mainWindow.loadURL('https://www.netflix.com/browse')
@@ -40,7 +42,7 @@ app.on('rpc', () => {
         let notification = new Notification({
             title: 'Could not connect to Discord',
             body: 'Click here to try again',
-            icon: path.join(__dirname, '../assets/icon.ico')
+            icon
         })
 
         notification.show()

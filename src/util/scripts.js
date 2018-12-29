@@ -26,7 +26,7 @@ module.exports = {
             let { duration, currentTime, paused } = document.querySelector('.VideoContainer').getElementsByTagName('video')[0]
 
             return {
-                name    : name.querySelector('h4').innerHTML || name.innerHTML,
+                name    : name.querySelector('h4') ? name.querySelector('h4').innerHTML : name.innerHTML,
                 title   : span[1] ? span[1].innerHTML : undefined,
                 episode : span[0] ? span[0].innerHTML : undefined,
                 duration, 

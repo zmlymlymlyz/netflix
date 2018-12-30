@@ -7,7 +7,7 @@
     "start": "electron .",
     "dist:mac": "build -m --publish always",
     "dist:linux": "build -l --publish always",
-    "dist:win": "build -w --publish always"
+    "dist:win": "build -w --x64 --publish always && build -w --ia32 --publish always"
   },
   "repository": {
     "type": "git",
@@ -28,10 +28,6 @@
     "appId": "com.netflix.nirewen",
     "win": {
       "target": "nsis",
-      "arch": [
-         "x64",
-          "ia32"
-      ],
       "icon": "./assets/icon.png"
     },
     "linux": {

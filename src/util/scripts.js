@@ -47,7 +47,12 @@ module.exports = {
             if (netflix.falcorCache.videos[id] && !!netflix.falcorCache.videos[id].summary.value.interactivity) {
                 duration = undefined
                 interactive = true
-                episode = 'Interactive ' + netflix.falcorCache.videos[id].summary.value.type
+
+                let text = `Interactive ${netflix.falcorCache.videos[id].summary.value.type}`
+                if (episode)
+                    title += ' - ' + text
+                else
+                    episode = text
             }
 
             name = name.querySelector('h4') ? name.querySelector('h4').innerHTML : name.innerHTML

@@ -36,7 +36,7 @@ module.exports = class BrowserWindow extends Electron.BrowserWindow {
         let infos = await this.getInfos()
         
         if (infos) { // if !infos don't change presence then.
-            let { name, title, episode, duration, currentTime, paused, avatar, userName } = infos
+            let { name, title, episode, duration, currentTime, paused, interactive, avatar, userName } = infos
             let video = episode && title
                 ? `${episode} - ${title}` 
                 : episode
@@ -61,17 +61,15 @@ module.exports = class BrowserWindow extends Electron.BrowserWindow {
             if (userName)
                 smallImageText = userName
     
-            if (duration && currentTime) {
-                if (!paused) {
-                    let now = moment.utc()
-                    let remaining = moment.duration(duration - currentTime, 'seconds')
-                    
-                    endTimestamp = now.add(remaining).unix()
-                }
+            if (duration && currentTime && !paused && !interactive) {
+                let now = moment.utc()
+                let remaining = moment.duration(duration - currentTime, 'seconds')
+                
+                endTimestamp = now.add(remaining).unix()
             }
                 
             // set activity less often | only update if something has changed
-            if (this.rpc.currentState.avatar !== avatar || this.rpc.currentState.video !== video || this.rpc.currentState.videoPaused !== paused) {
+            if (this.rpc.currentState.avatar !== avatar || this.rpc.currentState.video !== video || this.rpc.currentState.paused !== paused) {
                 this.rpc.currentState = { avatar, video, paused }
                 
                 this.rpc.setActivity({

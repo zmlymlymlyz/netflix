@@ -44,7 +44,7 @@ module.exports = {
             let episode = span[0] ? span[0].innerHTML : undefined
             let interactive = false
 
-            if (netflix.falcorCache.videos[id] && !!netflix.falcorCache.videos[id].summary.value.interactivity) {
+            if (netflix.falcorCache.videos && netflix.falcorCache.videos[id] && !!netflix.falcorCache.videos[id].summary.value.interactivity) {
                 duration = undefined
                 interactive = true
 

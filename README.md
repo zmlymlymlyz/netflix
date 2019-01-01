@@ -1,4 +1,5 @@
-# discord-netflix
+# discord-netflix [![Build Status](https://api.travis-ci.com/nirewen/discord-netflix.svg?branch=master)](https://travis-ci.com/nirewen/discord-netflix)
+
 A Netflix wrapper that uses Discord RPC to show what you're watching using the new Rich Presence
 
 # Prebuilt installers

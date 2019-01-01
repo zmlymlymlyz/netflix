@@ -7,7 +7,8 @@
     "start": "electron .",
     "dist:mac": "build -m --publish always",
     "dist:linux": "build -l --publish always",
-    "dist:win": "build -w --ia32 --x64 --publish always"
+    "dist:win": "build -w --x64 --publish always",
+    "dist:win32": "build -w --ia32 --publish always"
   },
   "repository": {
     "type": "git",

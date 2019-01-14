@@ -63,7 +63,7 @@ Watching a Show: <br>
 Watching a Movie: <br>
 ![Watching](https://img.hexaplexsoftware.ga/saved/r2vii1T7.png)
 
-Watching an Interactive movie: <br>
+Watching an Interactive video: <br>
 ![Watching](https://img.hexaplexsoftware.ga/saved/8312.png)
 
 # Tutorials

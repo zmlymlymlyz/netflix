@@ -20,7 +20,17 @@ Once it's done, run `npm start` to start the application.
 
 ## Build and distribution
 The app also have a build method, used for distribution. It will generate a NSIS installer for the app, and a packaged version of it.<br>
-To build the app for distribution, run `npm run dist`.
+
+You can also build different packages for different packages.
+
+**Windows:**
+`npm run dist:win`
+
+**Mac:**
+`npm run dist:mac`
+
+**Linux:**
+`npm run dist:linux`
 
 # Contributing
 If you have a suggestion, an implementation, a fix, you can fork this repo and make all the changes you want.<br>

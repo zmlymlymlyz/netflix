@@ -19,9 +19,7 @@ You have to install the dependencies. So, just run `npm install` in the repo's f
 Once it's done, run `npm start` to start the application.
 
 ## Build and distribution
-The app also have a build method, used for distribution. It will generate a NSIS installer for the app, and a packaged version of it.<br>
-
-You can also build different packages for different packages.
+The app also have a build method, used for distribution. It will generate a NSIS installer for the app, and a packaged version of it. You can build different packages for different operating softwares. <br>
 
 **Windows:**
 `npm run dist:win`

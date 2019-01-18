@@ -58,7 +58,9 @@ module.exports = function () {
 
                 name = name ? name.innerText : name.innerHTML
             }
-        } else { name = name ? name.querySelector('h4').innerHTML : name.innerText }
+        } else if (document.querySelector('.ellipsize-text').querySelectorAll('span')) { 
+            name = name ? name.querySelector('h4').innerHTML : name.querySelector('h4').innerText 
+        }
 
         return { name, title, episode, duration, currentTime, paused, interactive, avatar, userName }
     }

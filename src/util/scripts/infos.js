@@ -1,3 +1,5 @@
+/* global document, location, netflix */
+
 module.exports = function () {
     let [type, id] = location.pathname.split('/').slice(1, 3)
     let avatar = ''
@@ -41,18 +43,22 @@ module.exports = function () {
         let episode = span[0] ? span[0].innerHTML : undefined
         let interactive = false
 
-        if (netflix.falcorCache.videos && netflix.falcorCache.videos[id] && !!netflix.falcorCache.videos[id].summary.value.interactivity) {
+        if (netflix.falcorCache.videos && netflix.falcorCache.videos[id]) {
             duration = undefined
-            interactive = true
+        
+            if (document.querySelector('.PlayerControlsNeo__progress-control-row')) {
+                interactive = true
 
-            let text = `Interactive ${netflix.falcorCache.videos[id].summary.value.type}`
-            if (episode)
-                title += ' - ' + text
-            else
-                episode = text
-        }
+                let text = `Interactive video`
+            
+                if (episode)
+                    title += ' - ' + text
+                else
+                    episode = text
 
-        name = name.querySelector('h4') ? name.querySelector('h4').innerHTML : name.innerHTML
+                name = name ? name.innerText : name.innerHTML
+            }
+        } else { name = name.querySelector('h4') ? name.querySelector('h4').innerHTML : name.innerText }
 
         return { name, title, episode, duration, currentTime, paused, interactive, avatar, userName }
     }

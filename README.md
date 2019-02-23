@@ -19,8 +19,16 @@ You have to install the dependencies. So, just run `npm install` in the repo's f
 Once it's done, run `npm start` to start the application.
 
 ## Build and distribution
-The app also have a build method, used for distribution. It will generate a NSIS installer for the app, and a packaged version of it.<br>
-To build the app for distribution, run `npm run dist`.
+The app also have a build method, used for distribution. It will generate a NSIS installer for the app, and a packaged version of it. You can build different packages for different operating softwares. <br>
+
+**Windows:**
+`npm run dist:win`
+
+**Mac:**
+`npm run dist:mac`
+
+**Linux:**
+`npm run dist:linux`
 
 # Contributing
 If you have a suggestion, an implementation, a fix, you can fork this repo and make all the changes you want.<br>
@@ -55,6 +63,8 @@ Watching a Show: <br>
 Watching a Movie: <br>
 ![Watching](https://img.hexaplexsoftware.ga/saved/r2vii1T7.png)
 
+Watching an Interactive video: <br>
+![Watching](https://img.hexaplexsoftware.ga/saved/8312.png)
 
 # Tutorials
 

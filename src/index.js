@@ -1,5 +1,7 @@
 const { app, BrowserWindow, Notification } = require('./Electron')
 const { Client } = require('./RPC')
+const { NetflixParty } = require('./NetflixParty')
+const scripts = require('./util/scripts')
 const widevine = require('electron-widevinecdm')
 const path = require('path')
 
@@ -14,6 +16,7 @@ const rpc = new Client({
     transport: 'ipc',
     clientId: '387083698358714368'
 })
+const party = new NetflixParty();
 
 rpc.on('ready', () => {
     mainWindow.checkNetflix()
@@ -25,10 +28,24 @@ app.on('ready', () => {
     mainWindow = new BrowserWindow({
         rpc,
         title: 'Netflix',
-        icon
+        icon,
+        party,
     })
     mainWindow.maximize()
     mainWindow.loadURL('https://www.netflix.com/browse')
+
+    party.ipcSetup(mainWindow);
+    mainWindow.webContents.on('did-navigate-in-page', (e, url) => {
+        // This is a bit ugly but it works
+        let type = url.split('/').slice(1, 4)[2]
+
+        if (type === 'watch') {
+            // They're watching something so let's setup NetflixParty
+            mainWindow.webContents.send('np', {
+                type: 'createButton',
+            });
+        }
+    });
 
     app.emit('rpc')
 })

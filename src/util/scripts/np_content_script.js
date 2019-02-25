@@ -322,6 +322,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var messages = [];
     var unreadCount = 0;
     var originalTitle = document.title;
+    var currentPartyCount = 0;
 
     // UI constants
     var chatSidebarWidth = 360;
@@ -537,6 +538,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
         // receive messages from the server
         socket.on('sendMessage', function(data) {
           addMessage(data);
+          
+          console.log(data);
+          if (data.body == "joined") {
+            currentPartyCount++;
+            ipcRenderer.send('np', {
+              type: 'sessionUpdate',
+              partyCount: currentPartyCount
+            })
+          } else if (data.body == "left") {
+            currentPartyCount--;
+            ipcRenderer.send('np', {
+              type: 'sessionUpdate',
+              partyCount: currentPartyCount
+            })
+          }
         });
 
         // receive presence updates from the server
@@ -1004,12 +1020,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
             ownerId = request.data.controlLock ? userId : null;
             state = data.state;
             videoId = request.data.videoId;
+            currentPartyCount = 1;
             pushTask(broadcast(false));
             ipcRenderer.send("np", {
               type: 'response',
               response: 'createSession',
               sessionId: sessionId
             });
+            ipcRenderer.send('np', {
+              type: 'sessionUpdate',
+              partyCount: currentPartyCount
+            })
             updatePartyPopup("session");
           });
           return true;

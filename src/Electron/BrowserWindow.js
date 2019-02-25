@@ -26,7 +26,7 @@ module.exports = class BrowserWindow extends Electron.BrowserWindow {
 
         this.rpc = rpc
         this.party = party
-        this.knownPartySessionId = null
+        this.partyState = null
     }
 
     eval (code) {
@@ -73,37 +73,34 @@ module.exports = class BrowserWindow extends Electron.BrowserWindow {
                 endTimestamp = now.add(remaining).unix()
             }
                 
-            // set activity less often | only update if something has changed
-            if (this.rpc.currentState.avatar !== avatar || this.rpc.currentState.video !== video || this.rpc.currentState.paused !== paused || this.party.sessionData.id !== this.knownPartySessionId) {
-                this.rpc.currentState = { avatar, video, paused }
-
-                var activity = {
-                    details: name,
-                    state: video,
-                    largeImageKey: 'netflix',
-                    largeImageText: 'Netflix',
-                    smallImageKey,
-                    smallImageText,
-                    instance: false,
-                    endTimestamp
-                }
-
-                // Currently disabled (not programmed)
-                this.knownPartySessionId = this.party.sessionData.id
-                if (this.party.sessionData.id !== null) {
-                    var videoIdMatch = this.getURL().match(/^.*\/([0-9]+)\??.*/)
-                    if (videoIdMatch) {
-                        var videoId = parseInt(videoIdMatch[1]);
-                        activity.partyId = this.party.sessionData.id
-                        activity.partySize = 1
-                        activity.partyMax = 4
-                        activity.joinSecret = Buffer.from(videoId + "," + this.party.sessionData.id).toString('base64')
-                        activity.instance = true
-                    }
-                }
-
-                this.rpc.setActivity(activity)
+            this.rpc.currentState = { avatar, video, paused }
+            var activity = {
+                details: name,
+                state: video,
+                largeImageKey: 'netflix',
+                largeImageText: 'Netflix',
+                smallImageKey,
+                smallImageText,
+                instance: false,
+                endTimestamp
             }
+
+            // Currently disabled (not programmed)
+            this.partyState = this.party.sessionData
+            if (this.party.sessionData.id !== null) {
+                var videoIdMatch = this.getURL().match(/^.*\/([0-9]+)\??.*/)
+                if (videoIdMatch) {
+                    console.log("Partying with " + this.party.sessionData.partyCount + " people");
+                    var videoId = parseInt(videoIdMatch[1]);
+                    activity.partyId = this.party.sessionData.id
+                    activity.partySize = this.party.sessionData.partyCount
+                    activity.partyMax = this.party.sessionData.partyCount + 1
+                    activity.joinSecret = Buffer.from(videoId + "," + this.party.sessionData.id).toString('base64')
+                    activity.instance = true
+                }
+            }
+
+            this.rpc.setActivity(activity)
         }
     }
 }

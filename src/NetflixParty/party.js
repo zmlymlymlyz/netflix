@@ -3,7 +3,8 @@ const { ipcMain } = require('electron')
 module.exports = class NetflixParty {
     constructor () {
         this.sessionData = {
-            id: null
+            id: null,
+            partyCount: 0
         }
     }
 
@@ -16,6 +17,11 @@ module.exports = class NetflixParty {
                     type: data.call,
                     data: data.data
                 });
+            }
+
+            if (data.type == "sessionUpdate") {
+                console.log("Updaying session", data);
+                this.sessionData.partyCount = data.partyCount
             }
 
             // This is a response for an action taken (like a promise return but only async)

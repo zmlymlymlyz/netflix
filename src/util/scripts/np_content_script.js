@@ -323,6 +323,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var unreadCount = 0;
     var originalTitle = document.title;
     var currentPartyCount = 0;
+    var userInfo = null;
 
     // UI constants
     var chatSidebarWidth = 360;
@@ -516,7 +517,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
               jQuery('#chat-input').prop('disabled', true);
               socket.emit('sendMessage', {
-                body: body
+                body: (userInfo !== null) ? userInfo.username + ": " + body : body
               }, function() {
                 jQuery('#chat-input').val('').prop('disabled', false).focus();
               });
@@ -538,8 +539,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         // receive messages from the server
         socket.on('sendMessage', function(data) {
           addMessage(data);
-          
-          console.log(data);
+
           if (data.body == "joined") {
             currentPartyCount++;
             ipcRenderer.send('np', {
@@ -1105,7 +1105,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
           });
         }
 
-        if (request.type === 'createButton') {
+        if (request.type === 'discordUser') {
+          userInfo = request.data
+        }
+
+        if (request.type === 'initialize') {
+          ipcRenderer.send('np', {
+            type: 'getDiscordUser'
+          })
+
           // This event is called before everything is properly loaded
           waitForEl(".PlayerControlsNeo__button-control-row .ReportAProblemPopupContainer", function() {
             jQuery('.nf-player-container').after(partyStyling);

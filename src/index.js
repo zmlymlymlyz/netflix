@@ -49,7 +49,7 @@ app.on('ready', () => {
         if (type === 'watch') {
             // They're watching something so let's setup NetflixParty
             mainWindow.webContents.send('np', {
-                type: 'createButton',
+                type: 'initialize',
             });
 
             // Wait for NetflixParty
@@ -87,6 +87,8 @@ app.on('window-all-closed', () => {
 
 app.on('rpc', () => {
     rpc.start().then(() => {
+        party.setUserDetails(rpc.user)
+
         rpc.subscribe("ACTIVITY_JOIN", (data) => {
             let joinDetails = Buffer.from(data.secret, 'base64').toString('ascii').split(",")
             let videoId = parseInt(joinDetails[0]);

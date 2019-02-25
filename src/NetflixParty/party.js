@@ -6,11 +6,15 @@ module.exports = class NetflixParty {
             id: null,
             partyCount: 0
         }
+        this.user = null
+    }
+
+    setUserDetails (user) {
+        this.user = user
     }
 
     ipcSetup (mainWindow) {
         ipcMain.on('np', (sender, data) => {
-            console.log(data);
             // This is just loopback so the renderer can request a specific action be called
             if (data.type == "loopbackCall") {
                 mainWindow.webContents.send('np', {
@@ -19,8 +23,16 @@ module.exports = class NetflixParty {
                 });
             }
 
+            if (data.type == "getDiscordUser") {
+                if (this.user !== null) {
+                    mainWindow.webContents.send('np', {
+                        type: 'discordUser',
+                        data: this.user
+                    })
+                }
+            }
+
             if (data.type == "sessionUpdate") {
-                console.log("Updaying session", data);
                 this.sessionData.partyCount = data.partyCount
             }
 

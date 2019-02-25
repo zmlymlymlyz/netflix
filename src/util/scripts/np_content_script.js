@@ -1251,6 +1251,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
             copySession.on('click', () => {
               clipboard.writeText(sessionId);
             })
+
+            ipcRenderer.send('npsetup');
           });
         }
       }

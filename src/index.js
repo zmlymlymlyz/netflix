@@ -5,6 +5,7 @@ const scripts = require('./util/scripts')
 const widevine = require('electron-widevinecdm')
 const path = require('path')
 const discordRegister = require('electron-discord-register')
+const { ipcMain } = require('electron')
 
 widevine.load(app)
 
@@ -22,6 +23,7 @@ const rpc = new Client({
     clientId: '387083698358714368'
 })
 const party = new NetflixParty();
+let joinSession = null
 
 rpc.on('ready', () => {
     mainWindow.checkNetflix()
@@ -40,16 +42,40 @@ app.on('ready', () => {
     mainWindow.loadURL('https://www.netflix.com/browse')
 
     party.ipcSetup(mainWindow);
-    mainWindow.webContents.on('did-navigate-in-page', (e, url) => {
+    let navigationLoad = (loadType) => {
         // This is a bit ugly but it works
-        let type = url.split('/').slice(1, 4)[2]
+        let type = mainWindow.webContents.getURL().split('/').slice(1, 4)[2]
 
         if (type === 'watch') {
             // They're watching something so let's setup NetflixParty
             mainWindow.webContents.send('np', {
                 type: 'createButton',
             });
+
+            // Wait for NetflixParty
+            ipcMain.once('npsetup', () => {
+                if (loadType == "full") {
+                    if (joinSession !== null) {
+                        mainWindow.webContents.send('np', {
+                            type: 'joinSession',
+                            data: {
+                                sessionId: joinSession.id,
+                                videoId: joinSession.videoId,
+                            }
+                        })
+                        joinSession = null;
+                    }
+                }
+            });
         }
+    }
+
+    mainWindow.webContents.on('did-finish-load', () => {
+        navigationLoad("full");
+    });
+
+    mainWindow.webContents.on('did-navigate-in-page', () => {
+        navigationLoad("inpage");
     });
 
     app.emit('rpc')
@@ -62,7 +88,16 @@ app.on('window-all-closed', () => {
 app.on('rpc', () => {
     rpc.start().then(() => {
         rpc.subscribe("ACTIVITY_JOIN", (data) => {
-            console.log(data);
+            let joinDetails = Buffer.from(data.secret, 'base64').toString('ascii').split(",")
+            let videoId = parseInt(joinDetails[0]);
+            let sessionId = joinDetails[1];
+
+            joinSession = {
+                videoId: videoId,
+                id: sessionId,
+            }
+
+            mainWindow.loadURL("https://netflix.com/watch/" + videoId);
         });
     }).catch(e => {
         let notification = new Notification({

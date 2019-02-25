@@ -9,6 +9,7 @@ module.exports = class NetflixParty {
 
     ipcSetup (mainWindow) {
         ipcMain.on('np', (sender, data) => {
+            console.log(data);
             // This is just loopback so the renderer can request a specific action be called
             if (data.type == "loopbackCall") {
                 mainWindow.webContents.send('np', {
@@ -21,6 +22,8 @@ module.exports = class NetflixParty {
             if (data.type == "response") {
                 if (data.response == "createSession") {
                     this.sessionData.id = data.sessionId
+                } else if (data.response == "leaveSession") {
+                    this.sessionData.id = null
                 }
             }
         });

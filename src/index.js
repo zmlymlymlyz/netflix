@@ -4,12 +4,17 @@ const { NetflixParty } = require('./NetflixParty')
 const scripts = require('./util/scripts')
 const widevine = require('electron-widevinecdm')
 const path = require('path')
+const discordRegister = require('electron-discord-register')
 
 widevine.load(app)
 
 app.setAppUserModelId('com.netflix.nirewen')
 
 const icon = path.join(__dirname, '../assets/icon.png')
+const discordAppId = '387083698358714368'
+
+// Register the application with Discord for join requests
+discordRegister(discordAppId)
 
 let mainWindow
 const rpc = new Client({

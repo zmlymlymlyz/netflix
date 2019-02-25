@@ -91,11 +91,15 @@ module.exports = class BrowserWindow extends Electron.BrowserWindow {
                 // Currently disabled (not programmed)
                 this.knownPartySessionId = this.party.sessionData.id
                 if (this.party.sessionData.id !== null) {
-                    activity.partyId = this.party.sessionData.id
-                    activity.partySize = 1
-                    activity.partyMax = 4
-                    activity.joinSecret = "025ed05c71f639de8bfaa0d679d7c94b2fdce12f"
-                    activity.instance = true
+                    var videoIdMatch = this.getURL().match(/^.*\/([0-9]+)\??.*/)
+                    if (videoIdMatch) {
+                        var videoId = parseInt(videoIdMatch[1]);
+                        activity.partyId = this.party.sessionData.id
+                        activity.partySize = 1
+                        activity.partyMax = 4
+                        activity.joinSecret = Buffer.from(videoId + "," + this.party.sessionData.id).toString('base64')
+                        activity.instance = true
+                    }
                 }
 
                 this.rpc.setActivity(activity)

@@ -60,7 +60,11 @@ app.on('window-all-closed', () => {
 })
 
 app.on('rpc', () => {
-    rpc.start().catch(e => {
+    rpc.start().then(() => {
+        rpc.subscribe("ACTIVITY_JOIN", (data) => {
+            console.log(data);
+        });
+    }).catch(e => {
         let notification = new Notification({
             title: 'Could not connect to Discord',
             body: 'Click here to try again',

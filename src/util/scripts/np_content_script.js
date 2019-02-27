@@ -13,6 +13,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
     const io = require('socket.io-client')
 
     var withChatInterval = null;
+
+    (function($){
+      $.isBlank = function(obj){
+        return(!obj || $.trim(obj) === "");
+      };
+    })(jQuery);
     
     //////////////////////////////////////////////////////////////////////////
     // Vendor libraries                                                     //
@@ -880,6 +886,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         .NetflixPartyContainer .popup-content-wrapper {
           background: rgba(38,38,38,.85);
           border-radius: 0.3em;
+          padding: unset;
         }
 
         .NetflixPartyContainer .popup-content-wrapper .netflix-party-header {
@@ -947,29 +954,37 @@ document.addEventListener("DOMContentLoaded", function(event) {
           background: 0 0;
         }
 
-        .join-session-modal {
+        .session-modal {
           position: fixed;
           justify-content: center;
           align-items: center;
           display: none;
         }
 
-        .join-session-modal .modal-container {
+        .session-modal .modal-container {
           background: rgba(38,38,38,.85);
           border-radius: 0.3em;
           padding: 1rem;
         }
 
-        .join-session-modal .modal-container h3 {
+        .session-modal .modal-container h3 {
           margin-top: 0;
         }
 
-        .join-session-modal .modal-container .actions {
+        .session-modal .modal-container h3:not(:first-child) {
+          margin-top: 1em;
+        }
+
+        .session-modal .modal-container .actions {
           margin-top: 1.2rem;
         }
 
         .netflix-party-button-header {
           font-size: 1.2em;
+        }
+
+        .lock-controls-input {
+          margin-right: 0.25em;
         }
       </style>
     `
@@ -978,14 +993,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
       if (status == "session") {
         $('.create-session').css('display', "none");
         $('.join-session').css('display', "none");
-        $('.control-lock').css('display', "none");
         $('.show-chat').css('display', "block");
         $('.leave-session').css('display', "block");
         $('.copy-session').css('display', 'block');
       } else if (status == "nosession") {
         $('.create-session').css('display', "block");
         $('.join-session').css('display', "block");
-        $('.control-lock').css('display', "block");
         $('.show-chat').css('display', "none");
         $('.leave-session').css('display', "none");
         $('.copy-session').css('display', 'none');
@@ -1125,20 +1138,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
               </div>
             `);
             var popupContainer = $(`
-              <div class="touchable popup-content-wrapper keep-right">
-                <div class="netflix-party-header list-header">Netflix Party</div>
-              </div>
+              <div class="touchable popup-content-wrapper keep-right"></div>
             `)
             button.append(popupContainer);
             var popup = $(`
               <div class="popup-content netflix-party-container" data-uia="netflix-party-popup">
                 <ul class="list structural">
-                  <li class="control-lock">
-                    <span class="control-lock-check video-controls-check">
-                      <svg class="svg-icon svg-icon-nfplayerCheck" focusable="false"><use filter="" xlink:href="#nfplayerCheck"></use></svg>
-                    </span>Lock Controls
-                  </li>
+                  <li class="list-header">Netflix Party</li>
                   <li class="create-session" tabindex="0">Create Session</li>
+                  <li class="join-session" tabindex="0">Join Session</li>
                   <li class="show-chat">
                     <span class="show-chat-check video-controls-check">
                       <svg class="svg-icon svg-icon-nfplayerCheck" focusable="false"><use filter="" xlink:href="#nfplayerCheck"></use></svg>
@@ -1147,19 +1155,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
                   <li class="copy-session" tabindex="0">Copy Session ID</li>
                   <li class="leave-session" tabindex="0">Leave Session</li>
                 </ul>
-                <ul class="list structural">
-                  <li class="join-session" tabindex="0">Join Session</li>
-                </ul>
               </div>
             `)
             popupContainer.append(popup);
 
             var joinSessionModal = $(`
-              <div class="join-session-modal nfa-z-idx-1 nfa-d-flex nfa-w-100 nfa-h-100 nfa-flx-dir-col nfa-bs-bb-nfa-jc-center">
+              <div class="session-modal nfa-z-idx-1 nfa-d-flex nfa-w-100 nfa-h-100 nfa-flx-dir-col nfa-bs-bb-nfa-jc-center">
                 <div class="modal-container">
                   <h3>Enter Session ID</h3>
                   <div class="searchInput">
-                    <input type="text" class="session-input" data-search-input="true" dir="ltr" data-uia="search-box-input" maxlength="80" style="opacity: 1; transition-duration: 300ms;">
+                    <input type="text" class="session-input-join" data-search-input="true" dir="ltr" data-uia="search-box-input" maxlength="80" style="opacity: 1; transition-duration: 300ms;">
+                  </div>
+                  <h3>Enter Nickname</h3>
+                  <div class="searchInput">
+                    <input type="text" class="nickname-input-join" placeholder="Leave blank to inherit Discord" data-search-input="true" dir="ltr" data-uia="search-box-input" maxlength="32" style="opacity: 1; transition-duration: 300ms;">
                   </div>
                   <div class="actions">
                     <button class="join-session-button nf-icon-button nf-flat-button nf-flat-button-primary nf-flat-button-uppercase">Join</button>
@@ -1169,6 +1178,26 @@ document.addEventListener("DOMContentLoaded", function(event) {
               </div>
             `)
             $("body").append(joinSessionModal)
+
+            var createSessionModal = $(`
+              <div class="session-modal nfa-z-idx-1 nfa-d-flex nfa-w-100 nfa-h-100 nfa-flx-dir-col nfa-bs-bb-nfa-jc-center">
+                <div class="modal-container">
+                  <h3>Configuration</h3>
+                  <div class="checkboxInput">
+                    <input type="checkbox" class="lock-controls-input" data-search-input="true" dir="ltr" data-uia="search-box-input" maxlength="80" style="opacity: 1; transition-duration: 300ms;">Lock Controls
+                  </div>
+                  <h3>Enter Nickname</h3>
+                  <div class="searchInput">
+                    <input type="text" class="nickname-input-create" placeholder="Leave blank to inherit Discord" data-search-input="true" dir="ltr" data-uia="search-box-input" maxlength="32" style="opacity: 1; transition-duration: 300ms;">
+                  </div>
+                  <div class="actions">
+                    <button class="create-session-button nf-icon-button nf-flat-button nf-flat-button-primary nf-flat-button-uppercase">Create</button>
+                    <button class="cancel-create-session-button nf-icon-button nf-flat-button nf-flat-button-uppercase">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            `)
+            $("body").append(createSessionModal)
             
             button.hover(() => {
               button.addClass("PlayerControls--control-element--active");
@@ -1180,11 +1209,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
             $(".PlayerControlsNeo__button-control-row .ReportAProblemPopupContainer").before(button)
 
-            var controlLockCheck = $('.control-lock-check');
+            var controlLockCheck = $('.lock-controls-input');
             if (sessionLockControls) {
-              controlLockCheck.css('display', 'block');
+              controlLockCheck.prop('checked', true);
             } else {
-              controlLockCheck.css('display', 'none');
+              controlLockCheck.prop('checked', false);
             }
 
             var showChatCheck = $('.show-chat-check');
@@ -1198,15 +1227,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
             $('.leave-session').css('display', 'none');
             $('.copy-session').css('display', 'none');
 
-            var controlLock = $('.control-lock');
-            controlLock.on('click', () => {
-              if (sessionLockControls) {
-                sessionLockControls = false;
-                controlLockCheck.css('display', 'none');
-              } else {
-                sessionLockControls = true;
-                controlLockCheck.css('display', 'block');
-              }
+            var controlLock = $('.lock-controls-input');
+            controlLock.on('change', () => {
+              sessionLockControls = controlLock.prop('checked');
             })
 
             var showChat = $('.show-chat');
@@ -1230,19 +1253,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
               }
             })
 
-            var createSession = $('.create-session');
-            createSession.on('click', () => {
-              var videoId = parseInt(window.location.href.match(/^.*\/([0-9]+)\??.*/)[1]);
-              ipcRenderer.send('np', {
-                type: 'loopbackCall',
-                call: 'createSession',
-                data: {
-                  controlLock: sessionLockControls,
-                  videoId: videoId,
-                }
-              })
-            })
-
             var joinSession = $('.join-session');
             joinSession.on('click', () => {
               joinSessionModal.css('display', 'flex');
@@ -1250,6 +1260,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
             var joinSessionButton = $('.join-session-button');
             joinSessionButton.on('click', () => {
+              var nickname = $('.nickname-input-join');
+              if (!$.isBlank(nickname.val())) {
+                if (userInfo === null) {
+                  userInfo = {}
+                }
+
+                $('.nickname-input-create').val(nickname.val());
+                userInfo.username = nickname.val();
+              }
               joinSessionModal.css('display', 'none');
               var videoId = parseInt(window.location.href.match(/^.*\/([0-9]+)\??.*/)[1]);
               ipcRenderer.send('np', {
@@ -1265,6 +1284,39 @@ document.addEventListener("DOMContentLoaded", function(event) {
             var cancelJoinSessionButton = $('.cancel-join-session-button');
             cancelJoinSessionButton.on('click', () => {
               joinSessionModal.css('display', 'none');
+            })
+
+            var createSession = $('.create-session');
+            createSession.on('click', () => {
+              createSessionModal.css('display', 'flex');
+            })
+
+            var createSessionButton = $('.create-session-button');
+            createSessionButton.on('click', () => {
+              var nickname = $('.nickname-input-create');
+              if (!$.isBlank(nickname.val())) {
+                if (userInfo === null) {
+                  userInfo = {}
+                }
+
+                $('.nickname-input-join').val(nickname.val());
+                userInfo.username = nickname.val();
+              }
+              createSessionModal.css('display', 'none');
+              var videoId = parseInt(window.location.href.match(/^.*\/([0-9]+)\??.*/)[1]);
+              ipcRenderer.send('np', {
+                type: 'loopbackCall',
+                call: 'createSession',
+                data: {
+                  controlLock: sessionLockControls,
+                  videoId: videoId,
+                }
+              })
+            })
+
+            var cancelCreateSessionButton = $('.cancel-create-session-button');
+            cancelCreateSessionButton.on('click', () => {
+              createSessionModal.css('display', 'none');
             })
 
             var leaveSession = $('.leave-session');

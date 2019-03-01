@@ -42,23 +42,9 @@ module.exports = function () {
         let title = span[1] ? span[1].innerHTML : undefined
         let episode = span[0] ? span[0].innerHTML : undefined
         let interactive = false
+        // TODO: Better interactive video check. Severe problems are caused in the solutions currently found
 
-        if (netflix.falcorCache.videos && netflix.falcorCache.videos[id]) {
-            duration = undefined
-        
-            if (document.querySelector('.PlayerControlsNeo__progress-control-row')) {
-                interactive = true
-
-                let text = `Interactive video`
-            
-                if (episode)
-                    title += ' - ' + text
-                else
-                    episode = text
-
-                name = name ? name.innerText : name.innerHTML
-            }
-        } else { name = name.querySelector('h4') ? name.querySelector('h4').innerHTML : name.innerText }
+        name = name.querySelector('h4') ? name.querySelector('h4').innerHTML : name.innerText
 
         return { name, title, episode, duration, currentTime, paused, interactive, avatar, userName }
     }

@@ -312,6 +312,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
     // connection to the server
     var socket = io('https://s1.netflixparty.com');
 
+    var getURLParameter = function(url, key, queryIndex) {
+      var searchString = '?' + url.split('?')[queryIndex];
+      if (searchString === undefined) {
+        return null;
+      }
+      var escapedKey = key.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      var regex = new RegExp('[?|&]' + escapedKey + '=' + '([^&]*)(&|$)');
+      var match = regex.exec(searchString);
+      if (match === null) {
+        return null;
+      }
+      return decodeURIComponent(match[1]);
+    };
+
     // get the userId from the server
     var userId = null;
     socket.on('userId', function(data) {
@@ -544,6 +558,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         // receive messages from the server
         socket.on('sendMessage', function(data) {
+          console.log(data);
           addMessage(data);
 
           if (data.body == "joined") {
@@ -993,18 +1008,31 @@ document.addEventListener("DOMContentLoaded", function(event) {
       if (status == "session") {
         $('.create-session').css('display', "none");
         $('.join-session').css('display', "none");
-        $('.show-chat').css('display', "block");
-        $('.leave-session').css('display', "block");
-        $('.copy-session').css('display', 'block');
+        $('.show-chat').css('display', "list-item");
+        $('.leave-session').css('display', "list-item");
+        $('.copy-session').css('display', 'list-item');
       } else if (status == "nosession") {
-        $('.create-session').css('display', "block");
-        $('.join-session').css('display', "block");
+        $('.create-session').css('display', "list-item");
+        $('.join-session').css('display', "list-item");
         $('.show-chat').css('display', "none");
         $('.leave-session').css('display', "none");
         $('.copy-session').css('display', 'none');
       }
     }
 
+    // This is fired when they navigate away
+    window.addEventListener('popstate', () => {
+      if (sessionId !== null) {
+        ipcRenderer.send('np', {
+          type: 'loopbackCall',
+          call: 'leaveSession',
+          data: {}
+        })
+      }
+    });
+
+    var joinSessionModal = null;
+    var createSessionModal = null;
     // interaction with the electron app
     ipcRenderer.on('np',
       function(sender, request) {
@@ -1152,52 +1180,113 @@ document.addEventListener("DOMContentLoaded", function(event) {
                       <svg class="svg-icon svg-icon-nfplayerCheck" focusable="false"><use filter="" xlink:href="#nfplayerCheck"></use></svg>
                     </span>Show Chat
                   </li>
-                  <li class="copy-session" tabindex="0">Copy Session ID</li>
+                  <li class="copy-session" tabindex="0">Copy Session Url</li>
                   <li class="leave-session" tabindex="0">Leave Session</li>
                 </ul>
               </div>
             `)
             popupContainer.append(popup);
 
-            var joinSessionModal = $(`
-              <div class="session-modal nfa-z-idx-1 nfa-d-flex nfa-w-100 nfa-h-100 nfa-flx-dir-col nfa-bs-bb-nfa-jc-center">
-                <div class="modal-container">
-                  <h3>Enter Session ID</h3>
-                  <div class="searchInput">
-                    <input type="text" class="session-input-join" data-search-input="true" dir="ltr" data-uia="search-box-input" maxlength="80" style="opacity: 1; transition-duration: 300ms;">
-                  </div>
-                  <h3>Enter Nickname</h3>
-                  <div class="searchInput">
-                    <input type="text" class="nickname-input-join" placeholder="Leave blank to inherit Discord" data-search-input="true" dir="ltr" data-uia="search-box-input" maxlength="32" style="opacity: 1; transition-duration: 300ms;">
-                  </div>
-                  <div class="actions">
-                    <button class="join-session-button nf-icon-button nf-flat-button nf-flat-button-primary nf-flat-button-uppercase">Join</button>
-                    <button class="cancel-join-session-button nf-icon-button nf-flat-button nf-flat-button-uppercase">Cancel</button>
+            if (joinSessionModal == null) {
+              joinSessionModal = $(`
+                <div class="join-session-modal session-modal nfa-z-idx-1 nfa-d-flex nfa-w-100 nfa-h-100 nfa-flx-dir-col nfa-bs-bb-nfa-jc-center">
+                  <div class="modal-container">
+                    <h3>Enter Session ID</h3>
+                    <div class="searchInput">
+                      <input type="text" class="session-input-join" data-search-input="true" dir="ltr" data-uia="search-box-input" maxlength="80" style="opacity: 1; transition-duration: 300ms;">
+                    </div>
+                    <h3>Enter Nickname</h3>
+                    <div class="searchInput">
+                      <input type="text" class="nickname-input-join" placeholder="Leave blank to inherit Discord" data-search-input="true" dir="ltr" data-uia="search-box-input" maxlength="32" style="opacity: 1; transition-duration: 300ms;">
+                    </div>
+                    <div class="actions">
+                      <button class="join-session-button nf-icon-button nf-flat-button nf-flat-button-primary nf-flat-button-uppercase">Join</button>
+                      <button class="cancel-join-session-button nf-icon-button nf-flat-button nf-flat-button-uppercase">Cancel</button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            `)
-            $("body").append(joinSessionModal)
+              `)
+              $("body").append(joinSessionModal)
 
-            var createSessionModal = $(`
-              <div class="session-modal nfa-z-idx-1 nfa-d-flex nfa-w-100 nfa-h-100 nfa-flx-dir-col nfa-bs-bb-nfa-jc-center">
-                <div class="modal-container">
-                  <h3>Configuration</h3>
-                  <div class="checkboxInput">
-                    <input type="checkbox" class="lock-controls-input" data-search-input="true" dir="ltr" data-uia="search-box-input" maxlength="80" style="opacity: 1; transition-duration: 300ms;">Lock Controls
-                  </div>
-                  <h3>Enter Nickname</h3>
-                  <div class="searchInput">
-                    <input type="text" class="nickname-input-create" placeholder="Leave blank to inherit Discord" data-search-input="true" dir="ltr" data-uia="search-box-input" maxlength="32" style="opacity: 1; transition-duration: 300ms;">
-                  </div>
-                  <div class="actions">
-                    <button class="create-session-button nf-icon-button nf-flat-button nf-flat-button-primary nf-flat-button-uppercase">Create</button>
-                    <button class="cancel-create-session-button nf-icon-button nf-flat-button nf-flat-button-uppercase">Cancel</button>
+              var joinSessionButton = $('.join-session-button');
+              joinSessionButton.on('click', () => {
+                var nickname = $('.nickname-input-join');
+                if (!$.isBlank(nickname.val())) {
+                  if (userInfo === null) {
+                    userInfo = {}
+                  }
+
+                  $('.nickname-input-create').val(nickname.val());
+                  userInfo.username = nickname.val();
+                }
+                joinSessionModal.css('display', 'none');
+                var videoId = parseInt(window.location.href.match(/^.*\/([0-9]+)\??.*/)[1]);
+                var sessionId = getURLParameter($('.session-input-join').val(), 'npSessionId', 1);
+                ipcRenderer.send('np', {
+                  type: 'loopbackCall',
+                  call: 'joinSession',
+                  data: {
+                    sessionId: sessionId,
+                    videoId: videoId,
+                  }
+                })
+              })
+
+              var cancelJoinSessionButton = $('.cancel-join-session-button');
+              cancelJoinSessionButton.on('click', () => {
+                joinSessionModal.css('display', 'none');
+              })
+            }
+
+            if (createSessionModal == null) {
+              createSessionModal = $(`
+                <div class="create-session-modal session-modal nfa-z-idx-1 nfa-d-flex nfa-w-100 nfa-h-100 nfa-flx-dir-col nfa-bs-bb-nfa-jc-center">
+                  <div class="modal-container">
+                    <h3>Configuration</h3>
+                    <div class="checkboxInput">
+                      <input type="checkbox" class="lock-controls-input" data-search-input="true" dir="ltr" data-uia="search-box-input" maxlength="80" style="opacity: 1; transition-duration: 300ms;">Lock Controls
+                    </div>
+                    <h3>Enter Nickname</h3>
+                    <div class="searchInput">
+                      <input type="text" class="nickname-input-create" placeholder="Leave blank to inherit Discord" data-search-input="true" dir="ltr" data-uia="search-box-input" maxlength="32" style="opacity: 1; transition-duration: 300ms;">
+                    </div>
+                    <div class="actions">
+                      <button class="create-session-button nf-icon-button nf-flat-button nf-flat-button-primary nf-flat-button-uppercase">Create</button>
+                      <button class="cancel-create-session-button nf-icon-button nf-flat-button nf-flat-button-uppercase">Cancel</button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            `)
-            $("body").append(createSessionModal)
+              `)
+              $("body").append(createSessionModal)
+
+              var createSessionButton = $('.create-session-button');
+              createSessionButton.on('click', () => {
+                var nickname = $('.nickname-input-create');
+                if (!$.isBlank(nickname.val())) {
+                  if (userInfo === null) {
+                    userInfo = {}
+                  }
+
+                  $('.nickname-input-join').val(nickname.val());
+                  userInfo.username = nickname.val();
+                }
+                createSessionModal.css('display', 'none');
+                var videoId = parseInt(window.location.href.match(/^.*\/([0-9]+)\??.*/)[1]);
+                ipcRenderer.send('np', {
+                  type: 'loopbackCall',
+                  call: 'createSession',
+                  data: {
+                    controlLock: sessionLockControls,
+                    videoId: videoId,
+                  }
+                })
+              })
+
+              var cancelCreateSessionButton = $('.cancel-create-session-button');
+              cancelCreateSessionButton.on('click', () => {
+                createSessionModal.css('display', 'none');
+              })
+            }
             
             button.hover(() => {
               button.addClass("PlayerControls--control-element--active");
@@ -1258,65 +1347,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
               joinSessionModal.css('display', 'flex');
             })
 
-            var joinSessionButton = $('.join-session-button');
-            joinSessionButton.on('click', () => {
-              var nickname = $('.nickname-input-join');
-              if (!$.isBlank(nickname.val())) {
-                if (userInfo === null) {
-                  userInfo = {}
-                }
-
-                $('.nickname-input-create').val(nickname.val());
-                userInfo.username = nickname.val();
-              }
-              joinSessionModal.css('display', 'none');
-              var videoId = parseInt(window.location.href.match(/^.*\/([0-9]+)\??.*/)[1]);
-              ipcRenderer.send('np', {
-                type: 'loopbackCall',
-                call: 'joinSession',
-                data: {
-                  sessionId: $('.session-input').val(),
-                  videoId: videoId,
-                }
-              })
-            })
-
-            var cancelJoinSessionButton = $('.cancel-join-session-button');
-            cancelJoinSessionButton.on('click', () => {
-              joinSessionModal.css('display', 'none');
-            })
-
             var createSession = $('.create-session');
             createSession.on('click', () => {
               createSessionModal.css('display', 'flex');
-            })
-
-            var createSessionButton = $('.create-session-button');
-            createSessionButton.on('click', () => {
-              var nickname = $('.nickname-input-create');
-              if (!$.isBlank(nickname.val())) {
-                if (userInfo === null) {
-                  userInfo = {}
-                }
-
-                $('.nickname-input-join').val(nickname.val());
-                userInfo.username = nickname.val();
-              }
-              createSessionModal.css('display', 'none');
-              var videoId = parseInt(window.location.href.match(/^.*\/([0-9]+)\??.*/)[1]);
-              ipcRenderer.send('np', {
-                type: 'loopbackCall',
-                call: 'createSession',
-                data: {
-                  controlLock: sessionLockControls,
-                  videoId: videoId,
-                }
-              })
-            })
-
-            var cancelCreateSessionButton = $('.cancel-create-session-button');
-            cancelCreateSessionButton.on('click', () => {
-              createSessionModal.css('display', 'none');
             })
 
             var leaveSession = $('.leave-session');
@@ -1330,7 +1363,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
             var copySession = $('.copy-session');
             copySession.on('click', () => {
-              clipboard.writeText(sessionId);
+              clipboard.writeText("https://www.netflix.com/watch/" + videoId + "?npSessionId=" + sessionId + "&npServerId=s1");
             })
 
             ipcRenderer.send('npsetup');

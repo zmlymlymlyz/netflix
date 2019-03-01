@@ -90,7 +90,6 @@ module.exports = class BrowserWindow extends Electron.BrowserWindow {
             if (this.party.sessionData.id !== null) {
                 var videoIdMatch = this.getURL().match(/^.*\/([0-9]+)\??.*/)
                 if (videoIdMatch) {
-                    console.log("Partying with " + this.party.sessionData.partyCount + " people");
                     var videoId = parseInt(videoIdMatch[1]);
                     activity.partyId = this.party.sessionData.id
                     activity.partySize = this.party.sessionData.partyCount
